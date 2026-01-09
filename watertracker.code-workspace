@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"activityBar.background": "#103066",
+			"titleBar.activeBackground": "#16348f",
+			"titleBar.activeForeground": "#FCFAFE"
+		},
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit"
+		},
+		"cSpell.words": [
+      "bizarrecoding",
+    ],
+    "prettier.printWidth": 120
+	}
+}

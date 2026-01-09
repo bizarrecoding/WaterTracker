@@ -21,10 +21,19 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.bizarrecoding.watertracker"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d0506fe1-9a6e-4521-bb73-0e72dfa2a468"
+      }
+    },
+    "plugins": [
+      "expo-localization"
+    ]
   }
 }
