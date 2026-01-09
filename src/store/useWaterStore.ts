@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showHydrationStatusNotification } from '../services/notifications';
 
 interface WaterState {
   currentIntake: number;
@@ -39,18 +40,26 @@ export const useWaterStore = create<WaterState>()(
              lastUpdatedDate: today,
              history: { ...history, [lastUpdatedDate]: currentIntake }, 
            });
+          showHydrationStatusNotification(amount, get().dailyGoal);
         } else {
-          set({ currentIntake: currentIntake + amount });
+          const newAmount = currentIntake + amount;
+          set({ currentIntake: newAmount });
+          showHydrationStatusNotification(newAmount, get().dailyGoal);
         }
       },
 
-      setDailyGoal: (goal) => set({ dailyGoal: goal }),
+      setDailyGoal: (goal) => {
+        set({ dailyGoal: goal });
+        showHydrationStatusNotification(get().currentIntake, goal);
+      },
 
-      resetDaily: () => set({ currentIntake: 0 }),
+      resetDaily: () => {
+        set({ currentIntake: 0 });
+        showHydrationStatusNotification(0, get().dailyGoal);
+      },
       
       toggleNotifications: async (enabled: boolean) => {
-          set({ notificationsEnabled: enabled });
-          // Ideally we handle the actual scheduling/canceling here or in the component calling this
+        set({ notificationsEnabled: enabled });
       },
 
       checkDate: () => {
@@ -64,6 +73,7 @@ export const useWaterStore = create<WaterState>()(
             lastUpdatedDate: today,
             history: { ...history, [lastUpdatedDate]: currentIntake },
           });
+          showHydrationStatusNotification(0, get().dailyGoal);
         }
       },
     }),

@@ -1,4 +1,4 @@
-import { getLocales } from 'expo-localization';
+//import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 
 const i18n = new I18n({
@@ -23,6 +23,10 @@ const i18n = new I18n({
     invalidGoal: "Invalid Goal",
     invalidGoalMessage: "Please enter a valid number greater than 0",
     back: "Back",
+    notificationTitle: "💧 Time to Hydrate!",
+    notificationBody: "Keep up with your daily goal. Drink some water now!",
+    hydrationStatusTitle: "💧 Hydration Status",
+    hydrationStatusBody: "{{current}}ml / {{goal}}ml",
   },
   es: {
     home: 'Inicio',
@@ -45,10 +49,14 @@ const i18n = new I18n({
     invalidGoal: "Meta Inválida",
     invalidGoalMessage: "Por favor ingresa un número válido mayor a 0",
     back: "Atrás",
+    notificationTitle: "💧 ¡Hora de Hidratarse!",
+    notificationBody: "Sigue con tu meta diaria. ¡Bebe un poco de agua ahora!",
+    hydrationStatusTitle: "💧 Estado de Hidratación",
+    hydrationStatusBody: "{{current}}ml / {{goal}}ml",
   }
 });
 
-i18n.locale = getLocales()[0].languageCode ?? 'en';
+i18n.locale = 'es'//getLocales()[0].languageCode ?? 'en';
 i18n.enableFallback = true;
 
 export default i18n;

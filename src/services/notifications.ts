@@ -1,47 +1,39 @@
 import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
 import { Platform } from 'react-native';
+import i18n from './i18n';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
+    shouldShowBanner: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
-    shouldShowBanner: true,
     shouldShowList: true,
+    autoDismiss: true,
   }),
 });
 
 export async function registerForPushNotificationsAsync() {
-  let token;
-
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
       name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
+      importance: Notifications.AndroidImportance.HIGH,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: '#FF231F7C',
     });
   }
-
-  if (Device.isDevice || true) { // Allow on simulator for now to at least try logic
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      console.log('Failed to get push token for push notification!');
-      return;
-    }
-    // token = (await Notifications.getExpoPushTokenAsync()).data;
-    // console.log(token);
-  } else {
-    console.log('Must use physical device for Push Notifications by default, but local might work');
+  // no isDevice check due to local notifications 
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+  if (finalStatus !== 'granted') {
+    console.log('Failed to get push token for push notification!');
+    return;
   }
 
-  return true; // Success implies we can schedule
+  return true;
 }
 
 export async function cancelAllNotifications() {
@@ -49,23 +41,19 @@ export async function cancelAllNotifications() {
 }
 
 export async function scheduleHydrationReminder() {
-  // Cancel existing to avoid duplicates if called multiple times or logic changes
+  // Cancel existing to avoid duplicates
   await cancelAllNotifications();
 
-  // Schedule a recurring notification
-  // For demonstration, let's say every 2 hours or just a repeated trigger.
-  // Expo Notifications `timeInterval` is seconds.
-  
-  console.log('Scheduling hydration reminder in', 30, `seconds`);
+  console.log(`Scheduling hydration reminder in 3 hours`);
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "💧 Time to Hydrate!",
-      body: "Keep up with your daily goal. Drink some water now!",
+      title: i18n.t('notificationTitle'),
+      body: i18n.t('notificationBody'),
       sound: true,
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-      seconds: 30 * 1, // Every 2 hours
+      seconds: 60 * 60 * 3,
       repeats: true,
     },
   });
@@ -73,3 +61,23 @@ export async function scheduleHydrationReminder() {
 
 // Optional: Function to update dynamic notification content (if we wanted to show progress)
 // This is tricky with recurring, best used for one-off reminders.
+export async function showHydrationStatusNotification(current: number, goal: number) {
+  if (Platform.OS === 'android') {
+    // Ensure channel exists for ongoing notifications if different from default
+    // For simplicity reusing default but we could create a 'status' channel with LOW importance
+  }
+
+  await Notifications.scheduleNotificationAsync({
+    // fixed id will replace existing notification
+    identifier: 'hydration-status',
+    content: {
+      title: i18n.t('hydrationStatusTitle'),
+      body: i18n.t('hydrationStatusBody', { current, goal }),
+      sticky: true,
+      priority: Notifications.AndroidNotificationPriority.LOW,
+      sound: false,
+      autoDismiss: false,
+    },
+    trigger: null,
+  });
+}

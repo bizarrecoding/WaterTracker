@@ -4,11 +4,12 @@ import { StatusBar } from 'expo-status-bar';
 import { useWaterStore } from '../store/useWaterStore';
 import { ProgressRing } from '../components/ProgressRing';
 import { WaterControls } from '../components/WaterControls';
-import { registerForPushNotificationsAsync, scheduleHydrationReminder } from '../services/notifications';
+import { registerForPushNotificationsAsync, scheduleHydrationReminder, showHydrationStatusNotification } from '../services/notifications';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../services/i18n';
+import Ionicons from '@expo/vector-icons/build/Ionicons';
 
 export default function HomeScreen() {
   const { currentIntake, dailyGoal, addWater, checkDate } = useWaterStore();
@@ -16,10 +17,11 @@ export default function HomeScreen() {
 
   useEffect(() => {
     checkDate();
+    // Refresh persistent notification on mount
+    showHydrationStatusNotification(currentIntake, dailyGoal);
+
     registerForPushNotificationsAsync().then(success => {
-      if (success) {
-        scheduleHydrationReminder();
-      }
+      if (success) scheduleHydrationReminder();
     });
   }, []);
 
@@ -30,8 +32,9 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>{i18n.t('hydrationTracker')}</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-            <Text style={styles.settingsLink}>⚙️</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')}
+            style={styles.settingsLink}>
+            <Ionicons name="settings-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
         
@@ -50,10 +53,10 @@ export default function HomeScreen() {
         <WaterControls onAdd={addWater} />
 
         <TouchableOpacity 
-            style={styles.historyButton}
-            onPress={() => navigation.navigate('History')}
+          style={styles.historyButton}
+          onPress={() => navigation.navigate('History')}
         >
-            <Text style={styles.historyButtonText}>{i18n.t('viewHistory')}</Text>
+          <Text style={styles.historyButtonText}>{i18n.t('viewHistory')}</Text>
         </TouchableOpacity>
 
         <StatusBar style="auto" />
@@ -84,15 +87,13 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    fontSize: 28,
+    textAlign: 'center',
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#111827', 
   },
-  settingsLink: {
-    // position: 'absolute',
-      right: -50, // approximate placement
-    fontSize: 24,
-    // top: -5,
+  settingsLink: { 
+    marginLeft: 12,
   },
   statsContainer: {
     alignItems: 'center',

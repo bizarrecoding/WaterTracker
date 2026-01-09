@@ -23,26 +23,28 @@ export default function SettingsScreen() {
   };
 
   const handleToggleNotifications = (value: boolean) => {
-      toggleNotifications(value);
-      if (value) {
-          scheduleHydrationReminder(); 
-      } else {
-          cancelAllNotifications();
-      }
+    toggleNotifications(value);
+    if (value) {
+      scheduleHydrationReminder();
+    } else {
+      cancelAllNotifications();
+    }
   };
 
   const handleReset = () => {
-      Alert.alert(
-          i18n.t('resetConfirmTitle'),
-          i18n.t('resetConfirmMessage'),
-          [
-              { text: i18n.t('cancel'), style: "cancel" },
-              { text: i18n.t('reset'), style: "destructive", onPress: () => {
-                  resetDaily();
-                  Alert.alert(i18n.t('reset'), "Progress has been reset."); // Re-using reset as title
-              }}
-          ]
-      )
+    Alert.alert(
+      i18n.t('resetConfirmTitle'),
+      i18n.t('resetConfirmMessage'),
+      [
+        { text: i18n.t('cancel'), style: "cancel" },
+        {
+          text: i18n.t('reset'), style: "destructive", onPress: () => {
+            resetDaily();
+            Alert.alert(i18n.t('reset'), "Progress has been reset."); // Re-using reset as title
+          }
+        }
+      ]
+    )
   }
 
   return (
@@ -62,13 +64,13 @@ export default function SettingsScreen() {
         </View>
 
         <View style={[styles.section, styles.row]}>
-            <Text style={styles.label}>{i18n.t('enableNotifications')}</Text>
-            <Switch 
-                value={notificationsEnabled}
-                onValueChange={handleToggleNotifications}
-                trackColor={{ false: "#767577", true: "#81b0ff" }}
-                thumbColor={notificationsEnabled ? "#3b82f6" : "#f4f3f4"}
-            />
+          <Text style={styles.label}>{i18n.t('enableNotifications')}</Text>
+          <Switch
+            value={notificationsEnabled}
+            onValueChange={handleToggleNotifications}
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={notificationsEnabled ? "#3b82f6" : "#f4f3f4"}
+          />
         </View>
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
@@ -76,7 +78,7 @@ export default function SettingsScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.saveButton, styles.resetButton]} onPress={handleReset}>
-            <Text style={[styles.saveButtonText, styles.resetButtonText]}>{i18n.t('resetProgress')}</Text>
+          <Text style={[styles.saveButtonText, styles.resetButtonText]}>{i18n.t('resetProgress')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -133,12 +135,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   resetButton: {
-      marginTop: 20,
-      backgroundColor: 'transparent',
-      borderWidth: 1,
-      borderColor: '#ef4444'
+    marginTop: 20,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#ef4444'
   },
   resetButtonText: {
-      color: '#ef4444'
+    color: '#ef4444'
   }
 });
