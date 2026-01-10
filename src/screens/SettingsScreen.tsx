@@ -5,11 +5,19 @@ import { useNavigation } from '@react-navigation/native';
 import { scheduleHydrationReminder, cancelAllNotifications } from '../services/notifications';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../services/i18n';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 export default function SettingsScreen() {
   const { dailyGoal, setDailyGoal, resetDaily, notificationsEnabled, toggleNotifications } = useWaterStore();
   const [goalInput, setGoalInput] = useState(dailyGoal.toString());
   const navigation = useNavigation();
+
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const cardColor = useThemeColor({}, 'card');
+  const primaryColor = useThemeColor({}, 'primary');
+  const borderColor = useThemeColor({}, 'border');
+  const errorColor = useThemeColor({}, 'error');
 
   const handleSave = () => {
     const newGoal = parseInt(goalInput, 10);
@@ -48,14 +56,14 @@ export default function SettingsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor }]}>
       <View style={styles.content}>
-        <Text style={styles.title}>{i18n.t('settings')}</Text>
+        <Text style={[styles.title, { color: textColor }]}>{i18n.t('settings')}</Text>
 
         <View style={styles.section}>
-          <Text style={styles.label}>{i18n.t('dailyGoal')}</Text>
+          <Text style={[styles.label, { color: textColor }]}>{i18n.t('dailyGoal')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: cardColor, borderColor, color: textColor }]}
             value={goalInput}
             onChangeText={setGoalInput}
             keyboardType="numeric"
@@ -64,7 +72,7 @@ export default function SettingsScreen() {
         </View>
 
         <View style={[styles.section, styles.row]}>
-          <Text style={styles.label}>{i18n.t('enableNotifications')}</Text>
+          <Text style={[styles.label, { color: textColor }]}>{i18n.t('enableNotifications')}</Text>
           <Switch
             value={notificationsEnabled}
             onValueChange={handleToggleNotifications}
@@ -73,12 +81,12 @@ export default function SettingsScreen() {
           />
         </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <TouchableOpacity style={[styles.saveButton, { backgroundColor: primaryColor }]} onPress={handleSave}>
           <Text style={styles.saveButtonText}>{i18n.t('saveGoal')}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.saveButton, styles.resetButton]} onPress={handleReset}>
-          <Text style={[styles.saveButtonText, styles.resetButtonText]}>{i18n.t('resetProgress')}</Text>
+        <TouchableOpacity style={[styles.saveButton, styles.resetButton, { borderColor: errorColor }]} onPress={handleReset}>
+          <Text style={[styles.saveButtonText, { color: errorColor }]}>{i18n.t('resetProgress')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -86,20 +94,9 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f3f4f6',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 30,
-  },
+  container: { flex: 1 },
+  content: { flex: 1, padding: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 30 },
   section: {
     marginBottom: 20,
   },
@@ -110,20 +107,15 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#374151',
     marginBottom: 8,
     fontWeight: '500',
   },
   input: {
-    backgroundColor: 'white',
-    padding: 16,
     borderRadius: 12,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
   },
   saveButton: {
-    backgroundColor: '#3b82f6',
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -138,9 +130,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#ef4444'
   },
-  resetButtonText: {
-    color: '#ef4444'
-  }
 });

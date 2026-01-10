@@ -3,27 +3,33 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useWaterStore } from '../store/useWaterStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../services/i18n';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 export default function HistoryScreen() {
   const { history } = useWaterStore();
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const cardColor = useThemeColor({}, 'card');
+  const primaryColor = useThemeColor({}, 'primary');
+  const secondaryTextColor = useThemeColor({}, 'textSecondary');
 
   const historyData = Object.entries(history)
     .sort((a, b) => b[0].localeCompare(a[0])) // Sort descending by date
     .map(([date, amount]) => ({ date, amount }));
 
   const renderItem = ({ item }: { item: { date: string; amount: number } }) => (
-    <View style={styles.row}>
-      <Text style={styles.date}>{item.date}</Text>
-      <Text style={styles.amount}>{item.amount}ml</Text>
+    <View style={[styles.row, { backgroundColor: cardColor }]}>
+      <Text style={[styles.date, { color: textColor }]}>{item.date}</Text>
+      <Text style={[styles.amount, { color: primaryColor }]}>{item.amount}ml</Text>
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor }]}>
       <View style={styles.content}>
-        <Text style={styles.title}>{i18n.t('history')}</Text>
+        <Text style={[styles.title, { color: textColor }]}>{i18n.t('history')}</Text>
         {historyData.length === 0 ? (
-          <Text style={styles.empty}>{i18n.t('noHistory')}</Text>
+          <Text style={[styles.empty, { color: secondaryTextColor }]}>{i18n.t('noHistory')}</Text>
         ) : (
           <FlatList
             data={historyData}
@@ -38,25 +44,11 @@ export default function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f3f4f6',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 20,
-  },
-  list: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  content: { flex: 1, padding: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  list: { flex: 1 },
   row: {
-    backgroundColor: 'white',
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
@@ -69,20 +61,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  date: {
-    fontSize: 16,
-    color: '#374151',
-    fontWeight: '500',
-  },
-  amount: {
-    fontSize: 16,
-    color: '#3b82f6',
-    fontWeight: 'bold',
-  },
-  empty: {
-    textAlign: 'center',
-    color: '#6b7280',
-    marginTop: 40,
-    fontSize: 16,
-  }
+  date: { fontSize: 16, fontWeight: '500' },
+  amount: { fontSize: 16, fontWeight: 'bold' },
+  empty: { textAlign: 'center', marginTop: 40, fontSize: 16 }
 });

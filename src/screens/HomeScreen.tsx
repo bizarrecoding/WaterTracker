@@ -10,10 +10,16 @@ import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../services/i18n';
 import Ionicons from '@expo/vector-icons/build/Ionicons';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 export default function HomeScreen() {
   const { currentIntake, dailyGoal, addWater, checkDate } = useWaterStore();
   const navigation = useNavigation<any>();
+
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const secondaryTextColor = useThemeColor({}, 'textSecondary');
+  const primaryColor = useThemeColor({}, 'primary');
 
   useEffect(() => {
     checkDate();
@@ -28,13 +34,13 @@ export default function HomeScreen() {
   const progress = dailyGoal > 0 ? currentIntake / dailyGoal : 0;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor }]}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>{i18n.t('hydrationTracker')}</Text>
+          <Text style={[styles.title, { color: textColor }]}>{i18n.t('hydrationTracker')}</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Settings')}
             style={styles.settingsLink}>
-            <Ionicons name="settings-outline" size={24} color="black" />
+            <Ionicons name="settings-outline" size={24} color={textColor} />
           </TouchableOpacity>
         </View>
         
@@ -45,8 +51,8 @@ export default function HomeScreen() {
             progress={progress}
           />
           <View style={styles.statsText}>
-            <Text style={styles.current}>{currentIntake}ml</Text>
-            <Text style={styles.goal}>{i18n.t('goal')} {dailyGoal}ml</Text>
+            <Text style={[styles.current, { color: textColor }]}>{currentIntake}ml</Text>
+            <Text style={[styles.goal, { color: secondaryTextColor }]}>{i18n.t('goal')} {dailyGoal}ml</Text>
           </View>
         </View>
 
@@ -56,7 +62,7 @@ export default function HomeScreen() {
           style={styles.historyButton}
           onPress={() => navigation.navigate('History')}
         >
-          <Text style={styles.historyButtonText}>{i18n.t('viewHistory')}</Text>
+          <Text style={[styles.historyButtonText, { color: primaryColor }]}>{i18n.t('viewHistory')}</Text>
         </TouchableOpacity>
 
         <StatusBar style="auto" />
@@ -66,10 +72,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f3f4f6', 
-  },
+  container: { flex: 1 },
   content: {
     flexGrow: 1,
     paddingTop: Platform.OS === 'android' ? 40 : 0,
@@ -90,7 +93,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827', 
   },
   settingsLink: { 
     marginLeft: 12,
@@ -100,27 +102,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
   },
-  statsText: {
-    // position: 'absolute',
-    alignItems: 'center',
-  },
-  current: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#1f2937',
-  },
-  goal: {
-    fontSize: 14,
-    color: '#6b7280', 
-    marginTop: 4,
-  },
-  historyButton: {
-    marginTop: 40,
-    padding: 16,
-  },
-  historyButtonText: {
-    color: '#3b82f6',
-    fontSize: 16,
-    fontWeight: '600',
-  }
+  statsText: { alignItems: 'center' },
+  current: { fontSize: 36, fontWeight: 'bold' },
+  goal: { fontSize: 16, marginTop: 4 },
+  historyButton: { marginTop: 40, padding: 16 },
+  historyButtonText: { fontSize: 16, fontWeight: '600' },
 });

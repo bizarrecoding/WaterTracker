@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 interface WaterControlsProps {
   onAdd: (amount: number) => void;
@@ -8,14 +9,16 @@ interface WaterControlsProps {
 const PRESETS = [250, 500, 750];
 
 export const WaterControls: React.FC<WaterControlsProps> = ({ onAdd }) => {
+  const textColor = useThemeColor({}, 'text');
+  const primaryColor = useThemeColor({}, 'primary');
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Add Water</Text>
+      <Text style={[styles.label, { color: textColor }]}>Add Water</Text>
       <View style={styles.row}>
         {PRESETS.map((amount) => (
           <TouchableOpacity
             key={amount}
-            style={styles.button}
+            style={[styles.button, { backgroundColor: primaryColor }]}
             onPress={() => onAdd(amount)}
           >
             <Text style={styles.buttonText}>+{amount}ml</Text>
@@ -34,7 +37,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    color: '#4b5563', // gray-600
     marginBottom: 16,
     fontWeight: '600',
   },
@@ -44,7 +46,6 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   button: {
-    backgroundColor: '#3b82f6', // blue-500
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 12,

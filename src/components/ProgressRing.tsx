@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 interface ProgressRingProps {
   radius: number;
@@ -19,6 +20,7 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
   color = '#3b82f6', // blue-500
   backgroundColor = '#e5e7eb', // gray-200
 }) => {
+  const textColor = useThemeColor({}, 'text');  
   const normalizedRadius = radius - stroke * 2;
   const circumference = normalizedRadius * 2 * Math.PI;
   const strokeDashoffset = useRef(new Animated.Value(circumference)).current;
@@ -66,7 +68,7 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
         />
       </Svg>
       <View style={[StyleSheet.absoluteFill, styles.content]}>
-        <Text style={styles.percentage}>
+        <Text style={[styles.percentage, { color: textColor }]}>
           {Math.round(progress * 100)}%
         </Text>
       </View>
@@ -85,7 +87,6 @@ const styles = StyleSheet.create({
   },
   percentage: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#1f2937',
+    fontWeight: 'bold', 
   },
 });
