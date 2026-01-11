@@ -6,6 +6,7 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeContext, ThemeProvider } from './src/theme/ThemeContext';
 import { useContext } from 'react';
+import i18n from './src/services/i18n';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ const AppNavigation = () => {
           component={HistoryScreen}
           options={{
             headerShown: true,
+            headerTitle: i18n.t('history'),
             headerBackTitle: 'Back',
           }}
         />
@@ -42,6 +44,7 @@ const AppNavigation = () => {
           component={SettingsScreen}
           options={{
             headerShown: true,
+            headerTitle: i18n.t('settings'),
             presentation: 'modal', // Nice touch for settings
           }}
         />
