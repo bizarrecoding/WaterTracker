@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../services/i18n';
 import Ionicons from '@expo/vector-icons/build/Ionicons';
 import { useThemeColor } from '../hooks/useThemeColor';
+import { ThemedButton } from '../components/Buttons';
 
 export default function HomeScreen() {
   const { currentIntake, dailyGoal, addWater, checkDate } = useWaterStore();
@@ -19,7 +20,6 @@ export default function HomeScreen() {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const secondaryTextColor = useThemeColor({}, 'textSecondary');
-  const primaryColor = useThemeColor({}, 'primary');
 
   useEffect(() => {
     checkDate();
@@ -58,12 +58,7 @@ export default function HomeScreen() {
 
         <WaterControls onAdd={addWater} />
 
-        <TouchableOpacity 
-          style={styles.historyButton}
-          onPress={() => navigation.navigate('History')}
-        >
-          <Text style={[styles.historyButtonText, { color: primaryColor }]}>{i18n.t('viewHistory')}</Text>
-        </TouchableOpacity>
+        <ThemedButton variant='clear' style={styles.historyButton} title={i18n.t('viewHistory')} onPress={() => navigation.navigate('History')} />
 
         <StatusBar style="auto" />
       </ScrollView>
@@ -105,6 +100,5 @@ const styles = StyleSheet.create({
   statsText: { alignItems: 'center' },
   current: { fontSize: 36, fontWeight: 'bold' },
   goal: { fontSize: 16, marginTop: 4 },
-  historyButton: { marginTop: 40, padding: 16 },
-  historyButtonText: { fontSize: 16, fontWeight: '600' },
+  historyButton: { marginTop: 40, },
 });

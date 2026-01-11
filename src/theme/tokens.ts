@@ -1,3 +1,5 @@
+import { Theme } from "@react-navigation/native";
+
 export const colors = {
   white: '#ffffff',
   black: '#000000',
@@ -78,6 +80,6 @@ export default {
     textSecondary: tokens.textSecondary.dark,
     notification: tokens.error.dark,
   },
-};
+} as Record<"light" | "dark", Theme["colors"] & { error: string }>;
 
 export type DesignToken = keyof typeof tokens;

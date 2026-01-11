@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useThemeColor } from '../hooks/useThemeColor';
 import i18n from '../services/i18n';
+import { ThemedButton } from './Buttons';
 
 interface WaterControlsProps {
   onAdd: (amount: number) => void;
@@ -18,14 +19,13 @@ export const WaterControls: React.FC<WaterControlsProps> = ({ onAdd }) => {
       <View style={styles.rowWrap}>
         {PRESETS.map((amount) => {
           const type = amount < 400 ? 'cup' : 'bottle';
+          const title = `+${amount}ml\n${i18n.t(type)}`;
           return (
-            <TouchableOpacity
-              key={amount}
-              style={[styles.button, { backgroundColor: primaryColor }]}
+            <ThemedButton
+              title={title} 
               onPress={() => onAdd(amount)}
-            >
-              <Text style={styles.buttonText}>+{amount}ml{'\n'}{i18n.t(type)}</Text>
-            </TouchableOpacity>
+              style={styles.button}
+            />
           )
         })}
       </View>
@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 12,
     paddingHorizontal: 36,
-    borderRadius: 12,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

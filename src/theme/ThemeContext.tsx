@@ -1,18 +1,22 @@
-import { DarkTheme, DefaultTheme, Theme as ThemeType } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, Theme as NavTheme } from '@react-navigation/native';
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import Theme from './tokens';
 
-interface ThemeContextType {
+export type AppPalette = typeof Theme.light;
+
+type ThemeContextType = {
   isDark: boolean;
-  theme: ThemeType;
+  theme: NavTheme & {
+    colors: AppPalette;
+  };
   toggleTheme: () => void;
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
   isDark: false,
-  theme: DefaultTheme,
+  theme: { ...DefaultTheme, colors: Theme.light },
   toggleTheme: () => { },
   setTheme: () => { },
 });
@@ -47,6 +51,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     colors: isDark ? Theme.dark : Theme.light,
     fonts: isDark ? DarkTheme.fonts : DefaultTheme.fonts,
   }), [isDark])
+
+  theme.colors.error
 
   return (
     <ThemeContext.Provider value={{ isDark, theme, toggleTheme, setTheme }}>

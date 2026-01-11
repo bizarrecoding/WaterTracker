@@ -27,7 +27,6 @@ export default function HistoryScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor }]}>
       <View style={styles.content}>
-        <Text style={[styles.title, { color: textColor }]}>{i18n.t('history')}</Text>
         {historyData.length === 0 ? (
           <Text style={[styles.empty, { color: secondaryTextColor }]}>{i18n.t('noHistory')}</Text>
         ) : (

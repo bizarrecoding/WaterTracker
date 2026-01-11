@@ -6,6 +6,7 @@ import { scheduleHydrationReminder, cancelAllNotifications } from '../services/n
 import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../services/i18n';
 import { useThemeColor } from '../hooks/useThemeColor';
+import { ThemedButton } from '../components/Buttons';
 
 export default function SettingsScreen() {
   const { dailyGoal, setDailyGoal, resetDaily, notificationsEnabled, toggleNotifications } = useWaterStore();
@@ -58,7 +59,6 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor }]}>
       <View style={styles.content}>
-        <Text style={[styles.title, { color: textColor }]}>{i18n.t('settings')}</Text>
 
         <View style={styles.section}>
           <Text style={[styles.label, { color: textColor }]}>{i18n.t('dailyGoal')}</Text>
@@ -80,14 +80,9 @@ export default function SettingsScreen() {
             thumbColor={notificationsEnabled ? "#3b82f6" : "#f4f3f4"}
           />
         </View>
+        <ThemedButton title={i18n.t('saveGoal')} variant="primary" onPress={handleSave} />
 
-        <TouchableOpacity style={[styles.saveButton, { backgroundColor: primaryColor }]} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>{i18n.t('saveGoal')}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.saveButton, styles.resetButton, { borderColor: errorColor }]} onPress={handleReset}>
-          <Text style={[styles.saveButtonText, { color: errorColor }]}>{i18n.t('resetProgress')}</Text>
-        </TouchableOpacity>
+        <ThemedButton title={i18n.t('resetProgress')} variant="error" onPress={handleReset} />
       </View>
     </SafeAreaView>
   );
@@ -96,7 +91,6 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { flex: 1, padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 30 },
   section: {
     marginBottom: 20,
   },
@@ -111,6 +105,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   input: {
+    paddingHorizontal: 12,
     borderRadius: 12,
     fontSize: 16,
     borderWidth: 1,
