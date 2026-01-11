@@ -32,8 +32,15 @@
         "projectId": "d0506fe1-9a6e-4521-bb73-0e72dfa2a468"
       }
     },
+    "updates": {
+      "url": "https://u.expo.dev/d0506fe1-9a6e-4521-bb73-0e72dfa2a468"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      "expo-font"
     ]
   }
 }
