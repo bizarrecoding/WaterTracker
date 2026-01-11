@@ -1,29 +1,33 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useThemeColor } from '../hooks/useThemeColor';
+import i18n from '../services/i18n';
 
 interface WaterControlsProps {
   onAdd: (amount: number) => void;
 }
 
-const PRESETS = [250, 500, 750];
+const PRESETS = [250, 300, 400, 500];
 
 export const WaterControls: React.FC<WaterControlsProps> = ({ onAdd }) => {
   const textColor = useThemeColor({}, 'text');
   const primaryColor = useThemeColor({}, 'primary');
   return (
     <View style={styles.container}>
-      <Text style={[styles.label, { color: textColor }]}>Add Water</Text>
-      <View style={styles.row}>
-        {PRESETS.map((amount) => (
-          <TouchableOpacity
-            key={amount}
-            style={[styles.button, { backgroundColor: primaryColor }]}
-            onPress={() => onAdd(amount)}
-          >
-            <Text style={styles.buttonText}>+{amount}ml</Text>
-          </TouchableOpacity>
-        ))}
+      <Text style={[styles.label, { color: textColor }]}>{i18n.t('addWater')}</Text>
+      <View style={styles.rowWrap}>
+        {PRESETS.map((amount) => {
+          const type = amount < 400 ? 'cup' : 'bottle';
+          return (
+            <TouchableOpacity
+              key={amount}
+              style={[styles.button, { backgroundColor: primaryColor }]}
+              onPress={() => onAdd(amount)}
+            >
+              <Text style={styles.buttonText}>+{amount}ml{'\n'}{i18n.t(type)}</Text>
+            </TouchableOpacity>
+          )
+        })}
       </View>
     </View>
   );
@@ -45,9 +49,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 16,
   },
+  rowWrap: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 16,
+  }, 
   button: {
     paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingHorizontal: 36,
     borderRadius: 12,
     elevation: 2,
     shadowColor: '#000',
@@ -59,5 +69,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

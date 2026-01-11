@@ -27,6 +27,9 @@ const i18n = new I18n({
     notificationBody: "Keep up with your daily goal. Drink some water now!",
     hydrationStatusTitle: "💧 Hydration Status",
     hydrationStatusBody: "{{current}}ml / {{goal}}ml",
+    addWater: "Add Water",
+    cup: "Cup",
+    bottle: "Bottle",
   },
   es: {
     home: 'Inicio',
@@ -53,6 +56,9 @@ const i18n = new I18n({
     notificationBody: "Sigue con tu meta diaria. ¡Bebe un poco de agua ahora!",
     hydrationStatusTitle: "💧 Estado de Hidratación",
     hydrationStatusBody: "{{current}}ml / {{goal}}ml",
+    addWater: "Agregar Bebida",
+    cup: "Vaso",
+    bottle: "Botella",
   }
 });
 
