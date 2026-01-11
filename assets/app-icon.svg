@@ -2,6 +2,8 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
     <rect x="0" y="0" width="1024" height="1024" style="fill:white;"/>
-    <path d="M512,128C512,128 256,512 256,640C256,781.39 370.61,896 512,896C653.39,896 768,781.39 768,640C768,512 512,128 512,128Z" style="fill:rgb(59,130,246);fill-rule:nonzero;"/>
-    <path d="M724,626C770.667,692.667 697.333,810 564,870C602.919,834.973 650.11,787.406 681.636,734.788C704.112,697.273 715.676,653.748 724,626Z" style="fill:white;fill-opacity:0.3;fill-rule:nonzero;"/>
+    <g transform="translate(512, 512) scale(0.8) translate(-512, -512)">
+        <path d="M512,128C512,128 256,512 256,640C256,781.39 370.61,896 512,896C653.39,896 768,781.39 768,640C768,512 512,128 512,128Z" style="fill:rgb(59,130,246);fill-rule:nonzero;"/>
+        <path d="M724,626C770.667,692.667 697.333,810 564,870C602.919,834.973 650.11,787.406 681.636,734.788C704.112,697.273 715.676,653.748 724,626Z" style="fill:white;fill-opacity:0.3;fill-rule:nonzero;"/>
+    </g>
 </svg>
