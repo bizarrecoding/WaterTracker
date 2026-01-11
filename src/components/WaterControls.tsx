@@ -8,11 +8,10 @@ interface WaterControlsProps {
   onAdd: (amount: number) => void;
 }
 
-const PRESETS = [250, 300, 400, 500];
+const PRESETS = [250, 300, 400, 600];
 
 export const WaterControls: React.FC<WaterControlsProps> = ({ onAdd }) => {
   const textColor = useThemeColor({}, 'text');
-  const primaryColor = useThemeColor({}, 'primary');
   return (
     <View style={styles.container}>
       <Text style={[styles.label, { color: textColor }]}>{i18n.t('addWater')}</Text>

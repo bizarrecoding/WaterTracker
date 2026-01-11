@@ -17,10 +17,10 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
   radius,
   stroke,
   progress,
-  color = '#3b82f6', // blue-500
-  backgroundColor = '#e5e7eb', // gray-200
 }) => {
-  const textColor = useThemeColor({}, 'text');  
+  const textColor = useThemeColor({}, 'text');
+  const color = useThemeColor({}, 'primary');
+  const backgroundColor = useThemeColor({}, 'background');
   const normalizedRadius = radius - stroke * 2;
   const circumference = normalizedRadius * 2 * Math.PI;
   const strokeDashoffset = useRef(new Animated.Value(circumference)).current;
