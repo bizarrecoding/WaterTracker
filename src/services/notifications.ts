@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import i18n from './i18n';
+import { colors } from '../theme/tokens';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -18,7 +19,7 @@ export async function registerForPushNotificationsAsync() {
       name: 'default',
       importance: Notifications.AndroidImportance.HIGH,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
+      lightColor: colors.red500,
     });
   }
   // no isDevice check due to local notifications 
@@ -37,26 +38,39 @@ export async function registerForPushNotificationsAsync() {
 }
 
 export async function cancelAllNotifications() {
-    await Notifications.cancelAllScheduledNotificationsAsync();
+  await Notifications.cancelAllScheduledNotificationsAsync();
 }
 
-export async function scheduleHydrationReminder() {
-  // Cancel existing to avoid duplicates
-  await cancelAllNotifications();
+export async function cancelHydrationReminder() {
+  await Notifications.cancelScheduledNotificationAsync('hydration-reminder');
+}
 
-  console.log(`Scheduling hydration reminder in 3 hours`);
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: i18n.t('notificationTitle'),
-      body: i18n.t('notificationBody'),
-      sound: true,
-    },
-    trigger: {
-      type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-      seconds: 60 * 60 * 3,
-      repeats: true,
-    },
-  });
+type ReminderOptions = {
+  reset?: boolean;
+}
+
+export async function scheduleHydrationReminder(options: ReminderOptions = {}) {
+  const notifications = await Notifications.getAllScheduledNotificationsAsync();
+  const reminders = notifications.filter((n) => n.identifier === 'hydration-reminder');
+  if (reminders.length === 0 || options?.reset) {
+    if (options?.reset) await cancelHydrationReminder();
+    console.log(`Scheduling hydration reminder in 3 hours`);
+    await Notifications.scheduleNotificationAsync({
+      identifier: 'hydration-reminder',
+      content: {
+        title: i18n.t('notificationTitle'),
+        body: i18n.t('notificationBody'),
+        sound: true,
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 60 * 60 * 3,
+        repeats: true,
+      },
+    });
+  } else {
+    console.log(`Hydration reminder already scheduled`);
+  }
 }
 
 // Optional: Function to update dynamic notification content (if we wanted to show progress)

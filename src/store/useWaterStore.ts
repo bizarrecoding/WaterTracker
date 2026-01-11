@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { showHydrationStatusNotification } from '../services/notifications';
+import { scheduleHydrationReminder, showHydrationStatusNotification } from '../services/notifications';
 
 interface WaterState {
   currentIntake: number;
@@ -17,8 +17,14 @@ interface WaterState {
   checkDate: () => void; // call on app start to see if it's a new day
 }
 
-const getTodayDate = () => new Date().toISOString().split('T')[0];
-
+const getTodayDate = () => {
+  // Get today's date in YYYY-MM-DD format, needs to be timezone aware
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 export const useWaterStore = create<WaterState>()(
   persist(
     (set, get) => ({
@@ -46,6 +52,7 @@ export const useWaterStore = create<WaterState>()(
           set({ currentIntake: newAmount });
           showHydrationStatusNotification(newAmount, get().dailyGoal);
         }
+        scheduleHydrationReminder({ reset: true });
       },
 
       setDailyGoal: (goal) => {
