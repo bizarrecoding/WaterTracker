@@ -63,6 +63,7 @@ export async function scheduleHydrationReminder(options: ReminderOptions = {}) {
         sound: true,
       },
       trigger: {
+        channelId: 'default',
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
         seconds: 60 * 60 * 3,
         repeats: true,

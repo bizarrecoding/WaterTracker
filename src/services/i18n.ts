@@ -30,6 +30,7 @@ const i18n = new I18n({
     addWater: "Add Water",
     cup: "Cup",
     bottle: "Bottle",
+    changeTheme: "Change Theme",
   },
   es: {
     home: 'Inicio',
@@ -59,6 +60,7 @@ const i18n = new I18n({
     addWater: "Agregar Bebida",
     cup: "Vaso",
     bottle: "Botella",
+    changeTheme: "Cambiar Tema",
   }
 });
 

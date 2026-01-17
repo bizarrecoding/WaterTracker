@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Switch } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Switch, Platform } from 'react-native';
 import { useWaterStore } from '../store/useWaterStore';
 import { useNavigation } from '@react-navigation/native';
 import { scheduleHydrationReminder, cancelAllNotifications } from '../services/notifications';
@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../services/i18n';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { ThemedButton } from '../components/Buttons';
+import { ThemeContext } from '../theme/ThemeContext';
 
 export default function SettingsScreen() {
   const { dailyGoal, setDailyGoal, resetDaily, notificationsEnabled, toggleNotifications } = useWaterStore();
@@ -16,9 +17,9 @@ export default function SettingsScreen() {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const cardColor = useThemeColor({}, 'card');
-  const primaryColor = useThemeColor({}, 'primary');
   const borderColor = useThemeColor({}, 'border');
-  const errorColor = useThemeColor({}, 'error');
+
+  const { setTheme, themePreference } = useContext(ThemeContext);
 
   const handleSave = () => {
     const newGoal = parseInt(goalInput, 10);
@@ -56,6 +57,10 @@ export default function SettingsScreen() {
     )
   }
 
+  const handleThemeChange = () => {
+    setTheme(themePreference === 'dark' ? 'light' : 'dark');
+  }
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor }]}>
       <View style={styles.content}>
@@ -63,7 +68,7 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <Text style={[styles.label, { color: textColor }]}>{i18n.t('dailyGoal')}</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: cardColor, borderColor, color: textColor }]}
+            style={[styles.input, { backgroundColor: cardColor, borderColor, color: textColor, paddingVertical: Platform.OS === 'ios' ? 12 : 0 }]}
             value={goalInput}
             onChangeText={setGoalInput}
             keyboardType="numeric"
@@ -81,7 +86,7 @@ export default function SettingsScreen() {
           />
         </View>
         <ThemedButton title={i18n.t('saveGoal')} variant="primary" onPress={handleSave} />
-
+        <ThemedButton title={i18n.t('changeTheme')} variant="primary" onPress={handleThemeChange} />
         <ThemedButton title={i18n.t('resetProgress')} variant="error" onPress={handleReset} />
       </View>
     </SafeAreaView>
