@@ -4,6 +4,7 @@ import { useColorScheme } from 'react-native';
 import Theme from './tokens';
 
 export type AppPalette = typeof Theme.light;
+type ThemePreference = 'light' | 'dark' | 'system';
 
 type ThemeContextType = {
   isDark: boolean;
@@ -11,7 +12,8 @@ type ThemeContextType = {
     colors: AppPalette;
   };
   toggleTheme: () => void;
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  setTheme: (theme: ThemePreference) => void;
+  themePreference: ThemePreference;
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
@@ -19,11 +21,12 @@ export const ThemeContext = createContext<ThemeContextType>({
   theme: { ...DefaultTheme, colors: Theme.light },
   toggleTheme: () => { },
   setTheme: () => { },
+  themePreference: 'system',
 });
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const systemColorScheme = useColorScheme();
-  const [themePreference, setThemePreference] = useState<'light' | 'dark' | 'system'>('system');
+  const [themePreference, setThemePreference] = useState<ThemePreference>('system');
   const [isDark, setIsDark] = useState(systemColorScheme === 'dark');
 
   useEffect(() => {
@@ -43,7 +46,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   };
 
-  const setTheme = (theme: 'light' | 'dark' | 'system') => {
+  const setTheme = (theme: ThemePreference) => {
     setThemePreference(theme);
   }
   const theme = useMemo(() => ({
@@ -55,7 +58,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   theme.colors.error
 
   return (
-    <ThemeContext.Provider value={{ isDark, theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ isDark, theme, toggleTheme, setTheme, themePreference }}>
       {children}
     </ThemeContext.Provider>
   );

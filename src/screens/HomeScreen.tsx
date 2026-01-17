@@ -1,17 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, Platform, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useWaterStore } from '../store/useWaterStore';
-import { ProgressRing } from '../components/ProgressRing';
-import { WaterControls } from '../components/WaterControls';
-import { registerForPushNotificationsAsync, scheduleHydrationReminder, showHydrationStatusNotification } from '../services/notifications';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../services/i18n';
 import Ionicons from '@expo/vector-icons/build/Ionicons';
+
+import { useWaterStore } from '../store/useWaterStore';
+import { ProgressRing } from '../components/ProgressRing';
+import { WaterControls } from '../components/WaterControls';
+import { registerForPushNotificationsAsync, scheduleHydrationReminder, showHydrationStatusNotification } from '../services/notifications';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { ThemedButton } from '../components/Buttons';
+import { ThemeContext } from '../theme/ThemeContext';
 
 export default function HomeScreen() {
   const { currentIntake, dailyGoal, addWater, checkDate } = useWaterStore();
@@ -20,6 +23,7 @@ export default function HomeScreen() {
   const backgroundColor = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const secondaryTextColor = useThemeColor({}, 'textSecondary');
+  const { isDark } = useContext(ThemeContext);
 
   useEffect(() => {
     checkDate();
@@ -35,39 +39,49 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor }]}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: textColor }]}>{i18n.t('hydrationTracker')}</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')}
-            style={styles.settingsLink}>
-            <Ionicons name="settings-outline" size={24} color={textColor} />
-          </TouchableOpacity>
-        </View>
-        
-        <View style={styles.statsContainer}>
-          <ProgressRing
-            radius={120}
-            stroke={20}
-            progress={progress}
-          />
-          <View style={styles.statsText}>
-            <Text style={[styles.current, { color: textColor }]}>{currentIntake}ml</Text>
-            <Text style={[styles.goal, { color: secondaryTextColor }]}>{i18n.t('goal')} {dailyGoal}ml</Text>
+      <LinearGradient
+        colors={isDark ? ["#1d3676ff", backgroundColor] : [backgroundColor, "#7babf8"]}
+        style={styles.gradient}
+      >
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: textColor }]}>{i18n.t('hydrationTracker')}</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Settings')}
+              style={styles.settingsLink}>
+              <Ionicons name="settings-outline" size={24} color={textColor} />
+            </TouchableOpacity>
           </View>
-        </View>
 
-        <WaterControls onAdd={addWater} />
+          <View style={styles.statsContainer}>
+            <ProgressRing
+              radius={120}
+              stroke={20}
+              progress={progress}
+            />
+            <View style={styles.statsText}>
+              <Text style={[styles.current, { color: textColor }]}>{currentIntake}ml</Text>
+              <Text style={[styles.goal, { color: secondaryTextColor }]}>{i18n.t('goal')} {dailyGoal}ml</Text>
+            </View>
+          </View>
 
-        <ThemedButton variant='clear' style={styles.historyButton} title={i18n.t('viewHistory')} onPress={() => navigation.navigate('History')} />
+          <WaterControls onAdd={addWater} />
 
-        <StatusBar style="auto" />
-      </ScrollView>
+          <ThemedButton variant='clear' style={styles.historyButton} title={i18n.t('viewHistory')} onPress={() => navigation.navigate('History')} />
+
+          <StatusBar style="auto" />
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  gradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   content: {
     flexGrow: 1,
     paddingTop: Platform.OS === 'android' ? 40 : 0,
